@@ -1,7 +1,9 @@
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
+import Box from "@mui/material/Box";
 import { grey } from "@mui/material/colors";
+import Button from "@mui/material/Button";
 
 function Form({
   search,
@@ -21,6 +23,7 @@ function Form({
   onSearch: (i: React.MouseEvent<HTMLButtonElement, MouseEvent> | any) => void;
 }) {
   const helperText = error && "* this field is required";
+  const isEmptyField = Boolean(search);
   return (
     <form onSubmit={onSearch}>
       <TextField
@@ -34,9 +37,28 @@ function Form({
           bgcolor: grey[200],
         }}
         size="small"
-        InputProps={{
-          endAdornment: <SearchIcon sx={{ color: grey[500] }} />,
-        }}
+        // InputProps={{
+        //   endAdornment: (
+        //     <Box>
+        //       {isEmptyField && (
+        //         <Button
+        //           variant="contained"
+        //           color="inherit"
+        //           sx={{
+        //             borderRadius: 100,
+        //             m: 1,
+        //             minWidth: 0,
+        //             minHeight: 0,
+        //             px: 1,
+        //             py: 0,
+        //           }}
+        //         >
+        //           x
+        //         </Button>
+        //       )}
+        //     </Box>
+        //   ),
+        // }}
         placeholder="Enter username"
       />
       <LoadingButton

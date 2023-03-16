@@ -13,6 +13,9 @@ import { grey } from "@mui/material/colors";
 import axios, { AxiosResponse } from "axios";
 import Loading from "./Loading";
 import ReposList from "./ReposList";
+import ListNotFound from "./ListNotFound";
+import EmptyList from "./EmptyList";
+import Link from "./Link";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -70,7 +73,8 @@ function UserList({
   const handleClickAccordion = async (i: any) => {
     setIsloading(true);
     /// prevent it from refetching again after getting the repo list
-    if (i?.repos?.length <= 0) {
+    if (i?.repos?.length <= 0 || i?.repos?.isError) {
+      console.log("hello");
       await axios
         .get(i?.repos_url)
         .then((res: AxiosResponse<any, any>) => {
@@ -84,8 +88,20 @@ function UserList({
           setIsloading(false);
         })
         .catch((error: any) => {
-          console.log(error);
-          setIsloading(false);
+          if (error.code?.includes("ERR_NETWORK")) {
+            const newDataIfNetworkLost: any[] = data?.map((x: any) => {
+              if (x?.id === i?.id) {
+                return {
+                  ...x,
+                  repos: { isError: true, message: "Network Error" },
+                };
+              }
+              return x;
+            });
+            setData(newDataIfNetworkLost);
+            console.log(error);
+            setIsloading(false);
+          }
         });
     } else {
       setIsloading(false);
@@ -96,67 +112,17 @@ function UserList({
   return (
     <Box>
       {isNotFound ? (
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            mt: 5,
-          }}
-        >
-          <Box>
-            <Typography
-              variant="h5"
-              sx={{
-                textAlign: "center",
-                mt: 2,
-                fontWeight: "bold",
-                color: grey[500],
-              }}
-            >
-              Oops! Not Found
-            </Typography>
-            <Typography
-              sx={{
-                textAlign: "center",
-                color: grey[500],
-              }}
-            >
-              Nothing to show, try to enter the correct word. for example "
-              nurhamsah1998 "
-            </Typography>
-          </Box>
-        </Box>
+        <ListNotFound />
       ) : (
         <Box sx={{ mt: 1, display: "grid", gap: 2 }}>
           {data?.map((item: any, index: number) => {
             const isEmpty = item?.repos?.length <= 0;
-
+            const isNoNetworkConnection: boolean = item?.repos?.isError;
             const Content = () => {
               return (
                 <Box>
                   {isEmpty ? (
-                    <Box>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: "bold",
-                          color: grey[500],
-                          textAlign: "center",
-                        }}
-                      >
-                        Empty
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: grey[500],
-                          textAlign: "center",
-                          fontSize: 15,
-                        }}
-                      >
-                        there may not be shared repos
-                      </Typography>
-                    </Box>
+                    <EmptyList title="Empty" tag="No public repos to show" />
                   ) : (
                     <Box sx={{ display: "grid", gap: 2 }}>
                       {item?.repos?.map((repos: any, keyindex: number) => {
@@ -190,6 +156,15 @@ function UserList({
                   }}
                   aria-controls="panel1d-content"
                   id="panel1d-header"
+                  sx={{
+                    bgcolor:
+                      item?.repos?.length >= 1
+                        ? "#c6e2ff"
+                        : isNoNetworkConnection
+                        ? "#ffc6c6"
+                        : grey[200],
+                    transition: "0.5s",
+                  }}
                 >
                   <Typography sx={{ fontWeight: "bold" }}>
                     {item?.login}
@@ -198,7 +173,26 @@ function UserList({
                 <AccordionDetails
                   sx={{ borderBottom: `${grey[300]} 1px solid` }}
                 >
-                  {isLoading ? <Loading height="10vh" /> : <Content />}
+                  {isLoading ? (
+                    <Loading height="10vh" />
+                  ) : isNoNetworkConnection ? (
+                    <EmptyList
+                      title={item?.repos?.message}
+                      customTag={
+                        <Typography
+                          sx={{ textAlign: "center", color: grey[500] }}
+                        >
+                          Check your internet network. It seems you are not
+                          connected to the internet.{" "}
+                          <Link onClick={() => handleClickAccordion(item)}>
+                            Refresh
+                          </Link>
+                        </Typography>
+                      }
+                    />
+                  ) : (
+                    <Content />
+                  )}
                 </AccordionDetails>
               </Accordion>
             );
