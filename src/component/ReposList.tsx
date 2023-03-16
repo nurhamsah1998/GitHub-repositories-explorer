@@ -17,21 +17,29 @@ function ReposList({
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        bgcolor: grey[300],
+        bgcolor: grey[200],
         p: 2,
       }}
     >
-      <ListItemText primary={name} secondary={description} />
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-        <Typography>{star}</Typography>
-        <GradeIcon
-          sx={{
-            color: "#000",
-          }}
-        />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography sx={{ fontWeight: "bold", fontSize: 19 }}>
+          {name}
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+          <Typography>{star}</Typography>
+          <GradeIcon
+            sx={{
+              color: "#000",
+            }}
+          />
+        </Box>
       </Box>
+      <Typography sx={{ mt: 2, minWidth: "40px" }}>{description}</Typography>
     </Box>
   );
 }

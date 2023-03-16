@@ -105,14 +105,8 @@ function UserList({
           }}
         >
           <Box>
-            <img
-              src="/no-data.svg"
-              style={{
-                maxWidth: "230px",
-              }}
-            />
             <Typography
-              variant="h6"
+              variant="h5"
               sx={{
                 textAlign: "center",
                 mt: 2,
@@ -120,7 +114,16 @@ function UserList({
                 color: grey[500],
               }}
             >
-              Not Found
+              Oops! Not Found
+            </Typography>
+            <Typography
+              sx={{
+                textAlign: "center",
+                color: grey[500],
+              }}
+            >
+              Nothing to show, try to enter the correct word. for example "
+              nurhamsah1998 "
             </Typography>
           </Box>
         </Box>

@@ -9,23 +9,26 @@ function Form({
   isLoading,
   onSearch,
   error,
+  autoFocus,
 }: {
   search: string;
   error: boolean;
+  autoFocus: boolean;
   handleChange: (
     i: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
   isLoading: boolean;
-  onSearch: (i: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onSearch: (i: React.MouseEvent<HTMLButtonElement, MouseEvent> | any) => void;
 }) {
   const helperText = error && "* this field is required";
   return (
-    <form>
+    <form onSubmit={onSearch}>
       <TextField
         error={error}
         defaultValue={search}
         onChange={handleChange}
         fullWidth
+        autoFocus={autoFocus}
         helperText={helperText}
         sx={{
           bgcolor: grey[200],
