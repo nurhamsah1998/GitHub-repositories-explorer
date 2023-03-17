@@ -12,7 +12,7 @@ function StartList() {
         alignItems: "center",
       }}
     >
-      <Box>
+      <Box sx={{ mx: 3 }}>
         <Typography
           variant="h5"
           sx={{ fontWeight: "bold", color: grey[500], textAlign: "center" }}
