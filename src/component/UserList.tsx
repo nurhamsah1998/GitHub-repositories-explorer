@@ -41,7 +41,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
       : "rgba(0, 0, 0, .03)",
 
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-    transform: "rotate(180deg)",
+    transform: "rotate(90deg)",
   },
   ".css-v84d5j-MuiSvgIcon-root": {
     transform: "rotate(-90deg)",
@@ -70,7 +70,7 @@ function UserList({
     (panel: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
-  const handleClickAccordion = async (i: any) => {
+  const handleClickAccordion: (i: any) => Promise<void> = async (i: any) => {
     setIsloading(true);
     /// prevent it from refetching again after getting the repo list
     if (i?.repos?.length <= 0 || i?.repos?.isError) {
@@ -80,7 +80,11 @@ function UserList({
         .then((res: AxiosResponse<any, any>) => {
           const newData: any[] = data?.map((x: any) => {
             if (x?.id === i?.id) {
-              return { ...x, repos: res.data };
+              return {
+                ...x,
+                repos: res.data,
+                isEmptyRepos: Boolean(res.data?.length <= 0),
+              };
             }
             return x;
           });
@@ -99,7 +103,6 @@ function UserList({
               return x;
             });
             setData(newDataIfNetworkLost);
-            console.log(error);
             setIsloading(false);
           }
         });
@@ -116,9 +119,9 @@ function UserList({
       ) : (
         <Box sx={{ mt: 1, display: "grid", gap: 2 }}>
           {data?.map((item: any, index: number) => {
-            const isEmpty = item?.repos?.length <= 0;
+            const isEmpty: boolean = item?.repos?.length <= 0;
             const isNoNetworkConnection: boolean = item?.repos?.isError;
-            const Content = () => {
+            const Content: () => JSX.Element = () => {
               return (
                 <Box>
                   {isEmpty ? (
@@ -158,7 +161,7 @@ function UserList({
                   id="panel1d-header"
                   sx={{
                     bgcolor:
-                      item?.repos?.length >= 1
+                      item?.repos?.length >= 1 || item?.isEmptyRepos
                         ? "#c6e2ff"
                         : isNoNetworkConnection
                         ? "#ffc6c6"

@@ -22,8 +22,8 @@ function Form({
   isLoading: boolean;
   onSearch: (i: React.MouseEvent<HTMLButtonElement, MouseEvent> | any) => void;
 }) {
-  const helperText = error && "* this field is required";
-  const isEmptyField = Boolean(search);
+  const helperText: false | string = error && "* this field is required";
+  const isEmptyField: boolean = Boolean(search);
   return (
     <form onSubmit={onSearch}>
       <TextField

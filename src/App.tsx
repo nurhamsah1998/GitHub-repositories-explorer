@@ -9,14 +9,23 @@ import Loading from "./component/Loading";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import AlertDialog from "./component/AlertDialog";
+import { REDUCER_STATE, reducer } from "./Hook/reducer";
+import StartList from "./component/StartList";
 
+const initialState = {
+  isLoading: false,
+  isEmptyField: false,
+  isNotFound: false,
+  startScreen: true,
+};
 function App() {
   const inputRef: any = React.useRef<{ search: string }>({ search: "" });
   const [searchHelperText, setSearchHelperText] = React.useState<string>("");
   const [data, setData] = React.useState<[]>([]);
-  const [isEmptyField, setIsEmptyField] = React.useState<boolean>(false);
-  const [isLoading, setIsloading] = React.useState<boolean>(false);
-  const [isNotFound, setIsNotFound] = React.useState<boolean>(false);
+  const [state, dispatch]: REDUCER_STATE | any = React.useReducer<any>(
+    reducer,
+    initialState
+  );
   const [dialog, setDialog] = React.useState({
     open: false,
     message: "text",
@@ -31,8 +40,10 @@ function App() {
     i: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     i.preventDefault();
-    if (inputRef.current.search === "") return setIsEmptyField(true);
-    setIsloading(true);
+    if (inputRef.current.search === "")
+      return dispatch({ type: "showRequiredField" });
+    dispatch({ type: "showLoading" });
+    dispatch({ type: "startScreen", startScreen: false });
     setSearchHelperText(inputRef.current.search);
     await api
       .get(`/search/users?q=${inputRef.current.search}&per_page=5`)
@@ -42,9 +53,12 @@ function App() {
           repos: [],
         }));
         setData(dataRebuild);
-        setIsNotFound(Boolean(res.data?.items?.length <= 0));
-        setIsloading(false);
-        setIsEmptyField(false);
+        dispatch({
+          type: "isNotFound",
+          value: Boolean(res.data?.items?.length <= 0),
+        });
+        dispatch({ type: "hideLoading" });
+        dispatch({ type: "hideRequiredField" });
       })
       .catch((error: any) => {
         if (error.code?.includes("ERR_NETWORK")) {
@@ -54,13 +68,17 @@ function App() {
             message:
               "Check your internet network. It seems you are not connected to the internet",
           });
-          setIsNotFound(false);
-          setIsloading(false);
-          setIsEmptyField(false);
+          dispatch({
+            type: "isNotFound",
+            value: false,
+          });
+          dispatch({ type: "hideLoading" });
+          dispatch({ type: "hideRequiredField" });
         }
       });
   };
-  const showTextSearchInfo = Boolean(searchHelperText);
+
+  const showTextSearchInfo: boolean = Boolean(searchHelperText);
   return (
     <Box>
       <AlertDialog
@@ -82,9 +100,9 @@ function App() {
           }}
         >
           <Form
-            autoFocus={!isLoading}
-            error={isEmptyField}
-            isLoading={isLoading}
+            autoFocus={!state.isLoading}
+            error={state.isEmptyField}
+            isLoading={state.isLoading}
             search={inputRef.current.search}
             onSearch={onSearch}
             handleChange={handleChange}
@@ -95,11 +113,16 @@ function App() {
             </Typography>
           ) : null}
         </Paper>
+        {state.startScreen && <StartList />}
         <Box sx={{ px: { xs: 1, md: 3 }, my: 2 }}>
-          {isLoading ? (
+          {state.isLoading ? (
             <Loading />
           ) : (
-            <UserList setData={setData} data={data} isNotFound={isNotFound} />
+            <UserList
+              setData={setData}
+              data={data}
+              isNotFound={state.isNotFound}
+            />
           )}
         </Box>
       </DialogContext.Provider>

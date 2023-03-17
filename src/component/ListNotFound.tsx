@@ -30,8 +30,7 @@ function ListNotFound() {
             color: grey[500],
           }}
         >
-          Nothing to show, try to enter the correct word. for example "
-          nurhamsah1998 "
+          Enter the correct github username. for example " nurhamsah1998 "
         </Typography>
       </Box>
     </Box>
