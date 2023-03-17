@@ -167,6 +167,8 @@ function UserList({
                         ? "#ffc6c6"
                         : grey[200],
                     transition: "0.5s",
+                    position: expanded === index ? "sticky" : "relative",
+                    top: 0,
                   }}
                 >
                   <Typography sx={{ fontWeight: "bold" }}>

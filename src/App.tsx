@@ -1,16 +1,16 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import { AxiosResponse } from "axios";
-import { DialogContext } from "./Hook/context";
 import api from "./client/api";
 import Form from "./component/Form";
 import UserList from "./component/UserList";
 import Loading from "./component/Loading";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import AlertDialog from "./component/AlertDialog";
 import { REDUCER_STATE, reducer } from "./Hook/reducer";
 import StartList from "./component/StartList";
+import Drawer from "./component/Drawer";
+import grey from "@mui/material/colors/grey";
 
 const initialState = {
   isLoading: false,
@@ -80,25 +80,9 @@ function App() {
 
   const showTextSearchInfo: boolean = Boolean(searchHelperText);
   return (
-    <Box>
-      <AlertDialog
-        message={dialog.message}
-        headerTitle={dialog.headerTitle}
-        open={dialog.open}
-        setOpen={setDialog}
-      />
-      <DialogContext.Provider value={{ setDialog }}>
-        <Paper
-          elevation={3}
-          sx={{
-            position: "sticky",
-            top: 0,
-            zIndex: 999,
-            bgcolor: "#eeee",
-            py: 1,
-            px: { xs: 1, md: 3 },
-          }}
-        >
+    <Drawer
+      headerContent={
+        <Box sx={{ width: "100%" }}>
           <Form
             autoFocus={!state.isLoading}
             error={state.isEmptyField}
@@ -108,25 +92,32 @@ function App() {
             handleChange={handleChange}
           />
           {showTextSearchInfo ? (
-            <Typography sx={{ mt: 1 }}>
+            <Typography sx={{ mt: 1, color: grey[800] }}>
               Showing users for "{searchHelperText}"
             </Typography>
           ) : null}
-        </Paper>
-        {state.startScreen && <StartList />}
-        <Box sx={{ px: { xs: 1, md: 3 }, my: 2 }}>
-          {state.isLoading ? (
-            <Loading />
-          ) : (
-            <UserList
-              setData={setData}
-              data={data}
-              isNotFound={state.isNotFound}
-            />
-          )}
         </Box>
-      </DialogContext.Provider>
-    </Box>
+      }
+    >
+      <AlertDialog
+        message={dialog.message}
+        headerTitle={dialog.headerTitle}
+        open={dialog.open}
+        setOpen={setDialog}
+      />
+      {state.startScreen && <StartList />}
+      <Box sx={{ px: { xs: 1, md: 3 }, my: 2 }}>
+        {state.isLoading ? (
+          <Loading />
+        ) : (
+          <UserList
+            setData={setData}
+            data={data}
+            isNotFound={state.isNotFound}
+          />
+        )}
+      </Box>
+    </Drawer>
   );
 }
 
