@@ -84,7 +84,6 @@ function App() {
       headerContent={
         <Box sx={{ width: "100%" }}>
           <Form
-            autoFocus={!state.isLoading}
             error={state.isEmptyField}
             isLoading={state.isLoading}
             search={inputRef.current.search}

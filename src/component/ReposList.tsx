@@ -1,8 +1,6 @@
-import React from "react";
-import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import GradeIcon from "@mui/icons-material/Grade";
-import { grey, yellow } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 
 function ReposList({
