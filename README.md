@@ -27,6 +27,14 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ![](https://github.com/nurhamsah1998/GitHub-repositories-explorer/blob/main/Docs/github%20repository%20explorer.png)
 
+![](https://github.com/nurhamsah1998/GitHub-repositories-explorer/blob/main/Docs/github%20repository%20explorer%201.png)
+
+![](https://github.com/nurhamsah1998/GitHub-repositories-explorer/blob/main/Docs/github%20repository%20explorer%202.png)
+
+![](https://github.com/nurhamsah1998/GitHub-repositories-explorer/blob/main/Docs/github%20repository%20explorer%203.png)
+
+Thanks for best smartPhone simulator : https://chrome.google.com/webstore/detail/mobile-simulator-responsi/ckejmhbmlajgoklhgbapkiccekfoccmk
+
 
 ## Learn More
 
