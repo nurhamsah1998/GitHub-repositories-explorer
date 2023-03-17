@@ -40,8 +40,8 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
       ? "rgba(255, 255, 255, .05)"
       : "rgba(0, 0, 0, .03)",
 
-  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-    transform: "rotate(90deg)",
+  "& .css-3vmltg": {
+    transform: "rotate(-90deg)",
   },
   ".css-v84d5j-MuiSvgIcon-root": {
     transform: "rotate(-90deg)",
